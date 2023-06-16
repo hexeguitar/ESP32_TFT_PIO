@@ -1,6 +1,9 @@
 #include "gui.h"
 #include "display.h"
 #include "ldr.h"
+#include "Audio.h"
+
+extern Audio audio;
 
 lv_obj_t *screenMain;
 
@@ -14,11 +17,19 @@ lv_obj_t *label_dark;
 
 lv_obj_t *chart;
 lv_chart_series_t *ser_ldr;
-lv_chart_series_t *ser_dark;
+lv_chart_series_t *ser_slow;
+
+lv_obj_t *btn_say;
+lv_obj_t *btn_say_label;
 
 void task_ldr_cb(lv_task_t * task);
 static uint32_t user_data = 10;
 lv_task_t * task_ldr;
+
+static void event_handler_btn(lv_obj_t * obj, lv_event_t event);
+
+const char *txtNight = "It is time to go to bed.";
+const char *txtDay = "Wake up! Wake up!";
 
 void gui_init(void)
 {
@@ -27,7 +38,6 @@ void gui_init(void)
     static lv_style_t bigStyle;
     lv_style_init(&bigStyle);
     lv_style_set_text_font(&bigStyle, LV_STATE_DEFAULT, &UbuntuCond36);
-    
 
     static lv_style_t style_chart;
     lv_style_init(&style_chart);
@@ -37,8 +47,6 @@ void gui_init(void)
     lv_style_set_pad_right(&style_chart, LV_STATE_DEFAULT, 6);   
     lv_style_set_pad_ver(&style_chart, LV_STATE_DEFAULT, 16);  
     
-    #define TICK_LABEL_MARGIN   48
-
     chart = lv_chart_create(screenMain, NULL);
     lv_obj_set_size(chart, lv_obj_get_width(screenMain) - 12 , 2 * lv_obj_get_height(screenMain) / 3);
     lv_obj_set_pos(chart, 6, 6);
@@ -102,6 +110,8 @@ static void event_handler_btn(lv_obj_t *obj, lv_event_t event)
 {
     if (event == LV_EVENT_CLICKED)
     {
+        Serial.printf("TTS:");
+        audio.connecttospeech(ldr.isDark() ? txtNight : txtDay , "fr");
         // if (obj == btn1)
         //     lv_label_set_text(label, "Btn1");
         // else if (obj == btn2)
@@ -114,7 +124,15 @@ static void event_handler_btn(lv_obj_t *obj, lv_event_t event)
 void task_ldr_cb(lv_task_t * task)
 {
     int32_t ldrValue = ldr.get();
+    bool dark, changed;
+    dark = ldr.isDark(&changed);    
     lv_chart_set_next(chart, ser_ldr, ldrValue);
     lv_label_set_text_fmt(label_LDRval, "%03d", ldrValue);
-    lv_label_set_text_fmt(label_dark, "%s", ldr.isDark() ? "Night":"Day");
+    if (changed)
+    {
+        lv_label_set_text_fmt(label_dark, "%s", dark ? "Night":"Day");
+        audio.connecttospeech(dark ? txtNight :txtDay, "fr");
+    }
+    
 }
+

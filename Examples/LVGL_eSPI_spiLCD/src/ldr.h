@@ -33,14 +33,21 @@ public:
 // ----------------------------------------------------------------------------
     int32_t get()
     {
-        return filter(analogRead(LDR_PIN));           
+        value = filter(analogRead(LDR_PIN));
+        return value;           
     }
 // ----------------------------------------------------------------------------
-    bool isDark()
+    bool isDark(bool *hasChanged=nullptr)
     {   
         int32_t v = get();
         if (v > thres + hyst)         dark = true;
         else if (v < thres - hyst)    dark = false;
+        if (hasChanged)
+        {
+            if (dark != dark_prev) *hasChanged = true;
+            else                   *hasChanged = false; 
+        }
+        dark_prev = dark;
         return dark;
     }
 // ----------------------------------------------------------------------------    
@@ -58,12 +65,15 @@ public:
     {
         hyst = constrain(h, 0, thres) >> 1;       // store already halved value
     }
-
+// ----------------------------------------------------------------------------  
 private:
     bool dark;
+    bool dark_prev;
     int32_t thres = LDR_THRES_DEFAULT;                              // bright/dark threshold
     int16_t hyst = LDR_HYST_DEFAULT;                                // hystereis for the bright/dark detect.
-    int32_t fltVal;                                          // usd for iir filter
+    int32_t fltVal;                                                 // usd for iir filter
+    uint8_t smooth;                                                 // how smooth the pwm output is (response time)
+    int32_t value;                                                
     const int32_t feedfwd = (int32_t)LDR_FEEDFWD_THRES * 256;
     const uint8_t filter_coeff_shift =  2 ;
 
