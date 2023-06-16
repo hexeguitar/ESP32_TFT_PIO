@@ -1,6 +1,6 @@
 # ESP32-2432S028 example project  
 using PlatformIO and LVGL v7, onboard LDR and RGB led.  
-**WARNING! Project uses all the below explained hardware mods.**  
+**WARNING! The example project requireds hardware mods 1, 2 and 3.**  
 
 ---  
 ### Changelog  
@@ -12,7 +12,7 @@ using PlatformIO and LVGL v7, onboard LDR and RGB led.
 1. [LDR light sensor mod](#ldr)  
 2. [Audio amp gain mod](#2-audio-amp-gain-mod)
 3. [Adding PSRAM](#adding-psram)  
-
+4. 
 ### 1. LDR  
 Extends the light sensor read range and smooths out the curve.
 ![LDR range mod](./Pics/cyd_ldr_mod.jpg)
@@ -35,6 +35,13 @@ There is a SOIC8 footprint provided for a extra flash chip. We can use it for PS
 Both gpios are used by the RGB led. After removing it we can cut the existing tracks for the two above signals and rewire them to corresponding led pads. Both pins will have 1k pull up resistors. For the CS it is required, for the CLK it doesn't matter except maybe a bit higher current consumption. R16 can be removed if necessary.  
 ![PSRAM mod](./Pics/cyd_PSRAM_mod.jpg)  
 Having a led onboard might be handy while debugging, the red part of the RGB led (middle pins) can be used to add a 1206 led as shown on the pic. This led is available on **GPIO4**.  
+### Free up the GPIO21  
+**GPIO21** default use is PWM backlight control for the display. It is also available on the P3 connector. We can fix the backlight brightness to 100% and free up the GPIO21 for other tatks.  The mod requires to do the following:  
+1. Remove the Q2 - n-mosfet used to pwm the backlight.
+2. Remove the R10 10k pull down resistor.
+3. Rotate the R11, 3R9 current limiting resistor 90° and solder it to the R10's ground terminal.  
+   
+![GPIO21 mod](./Pics/cyd_gpio21_mod.jpg)
 
 ---
 Check out this link for more information and examples for this board:   
