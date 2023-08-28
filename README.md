@@ -1,12 +1,20 @@
-# ESP32-2432S028 example project  
-using PlatformIO and LVGL v7, onboard LDR and RGB led.  
-**WARNING! The example project requires hardware mods 1, 2 and 3.**  
+# ESP32-2432S028 aka Cheap Yellow Display example project  
+
+A complete PlatformIO starting project for the ESP32-2432S028 aka Cheap Yellow Display board consisting of:
+* custom drivers/libraries optized for the used hardware  
+* LVGL v.8.3.9 graphics library
+* rewritten and adapted for internal DAC audio library (see the mods below)  
+  
+[See here](Examples/CYD28_BaseProject/README.md) for more details about the project.  
 
 ---  
 ### Changelog  
-* Jun 16, 2023: Added more hardware mods, audio library and example using google TTS
-* Jun  6, 2023: Initial commit, basic PIO project using lvgl library
-
+* Aug 28th, 2023: Major update, completely new project using LVGL8, custom libraries. 
+* Jun 16th, 2023: Added more hardware mods, audio library and example using google TTS
+* Jun  6th, 2023: Initial commit, basic PIO project using lvgl library
+---
+### Pin Mapping 
+![Pin mapping](Pics/cyd_pinmapping.gif)
 ---
 ## Recommended modifications and technical details
 1. [LDR light sensor mod](#ldr)  
@@ -31,7 +39,7 @@ Sound quality can be greatly improved with a relatively simple modification requ
 For more detailed description see video:  
 [![CYD_AudioMod](http://img.youtube.com/vi/6JCLHIXXVus/0.jpg)](http://www.youtube.com/watch?v=6JCLHIXXVus)
 
-### Adding PSRAM  
+### 3. Adding PSRAM  
 4MB of PSRAM can be added ad the cost of the installed RGB led (well 2/3 of it). In my opinion additional memory will be more useful for multimedia heavy application the board is intended to than a single led placed on the back of the board.  
 There is a SOIC8 footprint provided for a extra flash chip. We can use it for PSRAM as it shares most of the pins with flash - except two:  
 * clock (has to be **GPIO17**)  
@@ -40,7 +48,7 @@ There is a SOIC8 footprint provided for a extra flash chip. We can use it for PS
 Both gpios are used by the RGB led. After removing it we can cut the existing tracks for the two above signals and rewire them to corresponding led pads. Both pins will have 1k pull up resistors. For the CS it is required, for the CLK it doesn't matter except maybe a bit higher current consumption. R16 can be removed if necessary.  
 ![PSRAM mod](./Pics/cyd_PSRAM_mod.jpg)  
 Having a led onboard might be handy while debugging, the red part of the RGB led (middle pins) can be used to add a 1206 led as shown on the pic. This led is available on **GPIO4**.  
-### Free up the GPIO21  
+### 4. Free up the GPIO21  
 **GPIO21** default use is PWM backlight control for the display. It is also available on the P3 connector. We can fix the backlight brightness to 100% and free up the GPIO21 for other tasks.  The mod requires to do the following:  
 1. Remove the Q2 - n-mosfet used to pwm the backlight.
 2. Remove the R10 10k pull down resistor.
@@ -48,7 +56,7 @@ Having a led onboard might be handy while debugging, the red part of the RGB led
    
 ![GPIO21 mod](./Pics/cyd_gpio21_mod.jpg)
 
-### Current consumption  
+### 5. Current consumption  
 With the audio amp gain mod the current spikes while playing audio can reach over 500mA as shown on the plot:  
 ![CurentDraw1](./Pics/cyd_CurrentDraw.gif)  
 The spikes already exceed the max current an USB2.0 port can deliver and might lead to MCU brownouts if the USB port has a dedicated power controller limiting the output current to max allowed value. I would recommend plugging this board via an active (powered) USB hub.  

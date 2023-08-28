@@ -58,7 +58,6 @@ Light dependent resistor used to measure the ambient light level has it's own li
 Following features are implemented:  
 - IIR filter for smooth readout,
 - threshold + hysteresis as day/night detector.  
-- 
 ![LDRTab](../../Pics/CYD_BaseProj_TabLDR.jpg)  
   
 ## CYD28_SD  
