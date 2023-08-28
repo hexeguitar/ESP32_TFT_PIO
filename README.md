@@ -8,11 +8,12 @@ using PlatformIO and LVGL v7, onboard LDR and RGB led.
 * Jun  6, 2023: Initial commit, basic PIO project using lvgl library
 
 ---
-## Recommended modifications  
+## Recommended modifications and technical details
 1. [LDR light sensor mod](#ldr)  
 2. [Audio amp gain mod](#2-audio-amp-gain-mod)
 3. [Adding PSRAM](#adding-psram)  
 4. [GPIO21 mod](#free-up-the-gpio21)
+5. [Current consumption](#current-consumption)
 ### 1. LDR  
 Extends the light sensor read range and smooths out the curve.
 ![LDR range mod](./Pics/cyd_ldr_mod.jpg)
@@ -22,10 +23,14 @@ and after:
 ![LDR range mod](./Pics/ldr_mod_rngAfter.jpg)  
 ### 2. Audio amp gain mod  
 The default configuration for the onboard audio amplifier has way too much gain (x14.5) resulting in nasty distortion and clipping. Software method to cope with that would be to reduce the volume of the signal. However, with 8bit DAC + low volume setting the resulting resolution will be so much reduced the sound be again distorted.  
-![Audio gain mod](./Pics/CYD_AudioMod.gif)  
-Luckily for the used power amp chip the gain can be set using the feedback resistor, just like with regular opamps. To lower the gain the resistance has to be decreased by simply putting another lower value resistor across the R9. With my board and speakers i tried the optimal value was around 10k.  
-With the reduced gain we can set the software volume to 100% and make use of the whole 8bit dynamic range.  
-![Audio gain mod](./Pics/cyd_audio_mod.jpg)  
+Another discovered problem was the input impedance of the amplfier (roughly 4k7) posed too much load for the ESP32's DAC buffers, resulting in a clipped half of the waveform.  
+
+![Audio gain mod](./Pics/CYD_Audio2_0.gif)  
+Sound quality can be greatly improved with a relatively simple modification requiring to replace a few components:  
+![Audio gain mod](./Pics/CYD_Audio_HWmod1.jpg)  
+For more detailed description see video:  
+[![CYD_AudioMod](http://img.youtube.com/vi/6JCLHIXXVus/0.jpg)](http://www.youtube.com/watch?v=6JCLHIXXVus)
+
 ### Adding PSRAM  
 4MB of PSRAM can be added ad the cost of the installed RGB led (well 2/3 of it). In my opinion additional memory will be more useful for multimedia heavy application the board is intended to than a single led placed on the back of the board.  
 There is a SOIC8 footprint provided for a extra flash chip. We can use it for PSRAM as it shares most of the pins with flash - except two:  
@@ -42,6 +47,19 @@ Having a led onboard might be handy while debugging, the red part of the RGB led
 3. Rotate the R11, 3R9 current limiting resistor 90° and solder it to the R10's ground terminal.  
    
 ![GPIO21 mod](./Pics/cyd_gpio21_mod.jpg)
+
+### Current consumption  
+With the audio amp gain mod the current spikes while playing audio can reach over 500mA as shown on the plot:  
+![CurentDraw1](./Pics/cyd_CurrentDraw.gif)  
+The spikes already exceed the max current an USB2.0 port can deliver and might lead to MCU brownouts if the USB port has a dedicated power controller limiting the output current to max allowed value. I would recommend plugging this board via an active (powered) USB hub.  
+The next modification might be risky because it abuses the USB standard of max allowed VBUS capacitance. In practice, when using a powered USB hub i found it causes no problems, nevertheless - do it at your own risk!  
+Adding a larger capacitance, in my case an C size 220uF/6.3V tantalum capacitor reduced the spikes to about 490mA when playing audio:  
+![CurrentDraw2](./Pics/cyd_CurrentDraw_220uF.png)  
+There are two 3.3V rails on the CYD board:  
+* dedicated entirely for the ESP32
+* pheripheral 3.3V bus used for SD card, display and the audio amp.  
+Capacitor has to be added to the second power rail. An easy access point is the Test Point **S5** and the ground terminal of **C1** 
+![220uF for 3.3V Bus](./Pics/cyd_3V3cap.jpg)    
 
 ---
 Check out this link for more information and examples for this board:   

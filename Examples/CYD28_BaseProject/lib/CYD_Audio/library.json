@@ -1,0 +1,17 @@
+{
+	"name": "CYD_Audio",
+	"version": "1.0.0",
+	"keywords": "audio, i2s, dac",
+	"description": "Audio library for the CYD series display+ESP32 board, based on work of schreibfaul1",
+	"repository": {
+		"type": "git",
+		"url": ""
+	},
+	"frameworks": "arduino",
+	"platforms": "espressif32",
+	"build": {
+		"includeDir": "."
+	},
+	"license": "MIT",
+	"homepage": ""
+}
