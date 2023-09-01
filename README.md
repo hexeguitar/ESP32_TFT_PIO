@@ -48,6 +48,12 @@ There is a SOIC8 footprint provided for a extra flash chip. We can use it for PS
 Both gpios are used by the RGB led. After removing it we can cut the existing tracks for the two above signals and rewire them to corresponding led pads. Both pins will have 1k pull up resistors. For the CS it is required, for the CLK it doesn't matter except maybe a bit higher current consumption. R16 can be removed if necessary.  
 ![PSRAM mod](./Pics/cyd_PSRAM_mod.jpg)  
 Having a led onboard might be handy while debugging, the red part of the RGB led (middle pins) can be used to add a 1206 led as shown on the pic. This led is available on **GPIO4**.  
+#### Suitable PSRAM chips:  
+* APS6404L-3SQR-SN  - 64Mbit (8MB) version, ESP will map only half of it. (Mouser#  878-APS6404L-3SQR-SN) 
+* APS1604M-3SQR-SN  - 16Mbit (2MB) version, probably enough for audio streaming and decoders. (Mouser# 878-APS1604M-3SQR-SN)  
+  
+What is important - it has to be the **3**SQR version. Models without **3** are 1.8V ones. Won't work in the CYD. 
+
 ### 4. Free up the GPIO21  
 **GPIO21** default use is PWM backlight control for the display. It is also available on the P3 connector. We can fix the backlight brightness to 100% and free up the GPIO21 for other tasks.  The mod requires to do the following:  
 1. Remove the Q2 - n-mosfet used to pwm the backlight.
