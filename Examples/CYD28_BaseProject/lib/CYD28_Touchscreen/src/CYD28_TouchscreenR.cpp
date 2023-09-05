@@ -118,7 +118,6 @@ CYD28_TS_Point CYD28_TouchR::getPointScaled()
 CYD28_TS_Point CYD28_TouchR::getPointRaw()
 {
 	update();
-
 	return CYD28_TS_Point(xraw, yraw, zraw);
 }
 // ------------------------------------------------------------

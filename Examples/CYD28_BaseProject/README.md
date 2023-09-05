@@ -38,10 +38,14 @@ New add ons, optimizations:
 - replaced heavy float + double precision calculations with integer ones in the volume scalling,  
 - output sample processing and i2s write is done in blocks instead of sample by sample procedure,
 - fixed annoying "click" at the stard and end of a sample when using the internal DAC by slow ramp up/down the mid scale  
+
 ![DAC ramp](../../Pics/CYDAudio_Fade.png)  
+
 - added a few useful functions like Volume Up/Down to be used with touch screen interface,  
 - added stereo RMS level detector for use with VU meters and possibly with dynamic based effects in the future (volume limiter, automatic level etc.).  
+
 ![AudioTab](../../Pics/CYD_BaseProj_TabAudio.jpg)  
+
 * Copy the 3 files found in the **Samples** directory onto an SD card and plug it in.  
 * Press buttons to play samples, try TTS speech systhesis, stream an audio file or web radio.
 * commands are ececuted in `gui.cpp` file in function `event_handler_btnsAudio(lv_event_t * e)`
@@ -58,6 +62,7 @@ Light dependent resistor used to measure the ambient light level has it's own li
 Following features are implemented:  
 - IIR filter for smooth readout,
 - threshold + hysteresis as day/night detector.  
+
 ![LDRTab](../../Pics/CYD_BaseProj_TabLDR.jpg)  
   
 ## CYD28_SD  
@@ -73,6 +78,7 @@ Touchscreen is incorporated into the LVGL graphics library.
 Library for accessing the onboard RGB led. In case of PSRAM mod (using gpio18, 19) two of the leds are not available.  
 
 ![RGBTab](../../Pics/CYD_BaseProj_TabRGB.jpg)  
+
 ## SimpleCLI  
 Basic command console via USB uart. Two commands are avaialble:  
 - list all the files found on the SD card,
@@ -82,6 +88,7 @@ WiFiManager library is included to provide easy network setup. This is the only 
 
 ## System Info  
 **SYS** tab on the main screen shows basic hardware information about the chip, WiFi status and IP address.  
+
 ![SYSTab](../../Pics/CYD_BaseProj_TabSYS.jpg) 
 
 ---  

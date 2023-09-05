@@ -65,10 +65,9 @@ public:
 	CYD28_TS_Point getPointRaw();
 	bool touched();
 	void readData(uint16_t *x, uint16_t *y, uint8_t *z);
-	uint8_t bufferSize() { return 1; }
 	void setRotation(uint8_t n) { rotation = n % 4; }
     void setThreshold(uint16_t th) { threshold = th;}
-// protected:
+
 	volatile bool isrWake=true;
 
 private:
