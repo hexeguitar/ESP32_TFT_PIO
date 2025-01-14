@@ -23,6 +23,7 @@
 
 #include <SPI.h>
 #include <WiFi.h>
+#include <WiFiClient.h>
 #include <WiFiClientSecure.h>
 #include <vector>
 #include <driver/i2s.h>
@@ -32,7 +33,7 @@
 #else
 #include <SD.h>
 #include <SD_MMC.h>
-#include <SPIFFS.h>
+//#include <SPIFFS.h>
 #include <FS.h>
 #include <FFat.h>
 #endif // SDFATFS_USED

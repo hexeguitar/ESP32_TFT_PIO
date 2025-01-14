@@ -188,7 +188,20 @@ void gui_init(void)
     lv_obj_align(RGB_btns, LV_ALIGN_CENTER, 0, 0);
     lv_obj_add_event_cb(RGB_btns, event_handler_btnsRGB, LV_EVENT_VALUE_CHANGED, NULL);
 	lv_obj_clear_flag(tabRGB, LV_OBJ_FLAG_SCROLLABLE);
-	#ifdef BOARD_HAS_PSRAM
+
+	#if defined(USE_I2S_DAC) && defined(BOARD_HAS_PSRAM)
+		static lv_obj_t *RGB_infoLabel = lv_label_create(tabRGB);
+		lv_label_set_text_static(RGB_infoLabel, "PSRAM MOD/I2S installed, RGB disabled!");
+		lv_obj_align(RGB_infoLabel, LV_ALIGN_TOP_MID,0,0);
+		lv_btnmatrix_set_btn_ctrl(RGB_btns, 0, LV_BTNMATRIX_CTRL_DISABLED);
+		lv_btnmatrix_set_btn_ctrl(RGB_btns, 1, LV_BTNMATRIX_CTRL_DISABLED);
+		lv_btnmatrix_set_btn_ctrl(RGB_btns, 2, LV_BTNMATRIX_CTRL_DISABLED);
+	#elif defined(USE_I2S_DAC)
+		static lv_obj_t *RGB_infoLabel = lv_label_create(tabRGB);
+		lv_label_set_text_static(RGB_infoLabel, "I2S MOD installed, R disabled!");
+		lv_obj_align(RGB_infoLabel, LV_ALIGN_TOP_MID,0,0);
+		lv_btnmatrix_set_btn_ctrl(RGB_btns, 0, LV_BTNMATRIX_CTRL_DISABLED);
+	#elif defined(BOARD_HAS_PSRAM)
 		static lv_obj_t *RGB_infoLabel = lv_label_create(tabRGB);
 		lv_label_set_text_static(RGB_infoLabel, "PSRAM MOD installed, G+B disabled!");
 		lv_obj_align(RGB_infoLabel, LV_ALIGN_TOP_MID,0,0);

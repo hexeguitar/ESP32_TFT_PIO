@@ -34,7 +34,13 @@ void audioInit()
 // ---------------------------------------------------------------
 void audioTask(void *parameter)
 {
+	// if using the I2S mod, RGB led is removed, I2S pinout defined in platformio.ini file
+#ifdef USE_I2S_DAC
+	audio.begin();
+	audio.setPinout(I2S_BCK_PIN, I2S_LRCLK_PIN, I2S_DIN_PIN);
+#else
 	audio.begin(true, I2S_DAC_CHANNEL_LEFT_EN);
+#endif
 	CreateQueues();
 	if (!audioSetQueue || !audioGetQueue)
 	{

@@ -13,13 +13,15 @@ Depending on the performed mods, one or more of the build flags has to be enable
 ```
 [env:esp32devCYD_MOD]
 build_flags = 
-            	-DCORE_DEBUG_LEVEL=3
+				${env.build_flags}
             	-DBOARD_HAS_PSRAM						# PSRAM mod used - no RGB LED
 	          	-mfix-esp32-psram-cache-issue			#
  				-mfix-esp32-psram-cache-strategy=memw	#
 			  	-DUSE_BACKLIGHT_MOD						# TFT fixed backlight mod used, will free up the GPIO21
-				-DAUDIO_LOG 							# enable log info in the audio library
-				-DLV_CONF_INCLUDE_SIMPLE
+				-DUSE_I2S_DAC							# uncomment to enable I2S output using CN1 and GPIO4 (RGB led removed)  
+				-DI2S_BCK_PIN=4							# pinout for the I2S
+				-DI2S_LRCLK_PIN=22
+				-DI2S_DIN_PIN=27
 ```  
 Adjust the settings corresponding to your board version and click upload.  
 **Caution!** if a firmware with PSRAM enabled is written to a board without PSRAM it will most likely end in a boot loop.
@@ -49,7 +51,11 @@ New add ons, optimizations:
 * Copy the 3 files found in the **Samples** directory onto an SD card and plug it in.  
 * Press buttons to play samples, try TTS speech systhesis, stream an audio file or web radio.
 * commands are ececuted in `gui.cpp` file in function `event_handler_btnsAudio(lv_event_t * e)`
-  
+
+### Using I2S DACs  
+An external DAC like the PCM5102A or the 3W amplifier MAX98357A can be added at the cost of the onboard RGB Led. GPIO4, GPIO22 and GPIO27 are used to create an I2S DAC bus.  
+In order to enable in in the software, uncomment the `-DUSE_I2S_DAC` build flag in the `platformio.ini` file.
+
 ### Note  
 **OGG Vorbis and FLAC decoders will work only with PSRAM mod installed.  
 Streaming audio might also be problematic due to not enough RAM available for buffers.**

@@ -22,8 +22,10 @@ public:
    // --------------------------------------- 
 	void begin(void)
     {
+#ifndef USE_I2S_DAC
         pinMode(CYD_LED_RED, OUTPUT);
         digitalWrite(CYD_LED_RED, CYD_LED_OFF);
+#endif
 #ifndef BOARD_HAS_PSRAM
         pinMode(CYD_LED_GREEN, OUTPUT);
         pinMode(CYD_LED_BLUE, OUTPUT);
@@ -32,11 +34,18 @@ public:
 #endif        
     }
 	// ---------------------------------------   
-	void red(bool r) { digitalWrite(CYD_LED_RED, r ? CYD_LED_ON : CYD_LED_OFF); }
+	void red(bool r) 
+	{ 
+#ifndef USE_I2S_DAC
+		digitalWrite(CYD_LED_RED, r ? CYD_LED_ON : CYD_LED_OFF); 
+#endif
+	}
  	// ---------------------------------------     
 	void red()
     {
+#ifndef USE_I2S_DAC		
         digitalWrite(CYD_LED_RED, CYD_LED_ON);
+#endif
 #ifndef BOARD_HAS_PSRAM        
         digitalWrite(CYD_LED_GREEN, CYD_LED_OFF);
         digitalWrite(CYD_LED_BLUE, CYD_LED_OFF); 
@@ -45,7 +54,9 @@ public:
 	// --------------------------------------- 
     void redToggle()
     {
+#ifndef USE_I2S_DAC		
         digitalWrite(CYD_LED_RED, digitalRead(CYD_LED_RED) ? CYD_LED_ON : CYD_LED_OFF);            
+#endif
     }   
     // ---------------------------------------
     void green(bool g) 
